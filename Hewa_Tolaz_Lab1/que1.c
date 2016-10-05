@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 void view_options();
 void E(char *in, char *out);
@@ -164,7 +163,7 @@ void new_password(char *un, char *hashed_input) {
     f1 = fopen("table.txt", "r");
     f2 = fopen("temp.txt", "w+");
 
-    while(fgets(line, 64, f1) != NULL) {
+    while(fgets(line, 64, f1)) {
         trim_return(line);
         hash = separate_hash(line);
         if(strcmp(line,un) == 0)
@@ -189,7 +188,7 @@ void check_user(char * un) {
     f = fopen("table.txt", "r");
     counter = 0;
 
-    while(fgets(user, 32, f) != NULL) { //check every user
+    while(fgets(user, 32, f)) { //check every user
         trim_return(user);
         separate_hash(user);
         if(strcmp(un,user) == 0) { //checks if user matches a record
