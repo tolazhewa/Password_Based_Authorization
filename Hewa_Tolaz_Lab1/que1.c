@@ -183,12 +183,12 @@ void check_user(char * un) {
     char *user,*hash,*pass_input,*hashed_input;
     int counter;
 
-    user = (char*)calloc(sizeof(char),32);
+    user = (char*)calloc(sizeof(char),128);
     pass_input = (char*)calloc(sizeof(char),128);
     f = fopen("table.txt", "r");
     counter = 0;
 
-    while(fgets(user, 32, f)) { //check every user
+    while(fgets(user, 128, f)) { //check every user
         trim_return(user);
         separate_hash(user);
         if(strcmp(un,user) == 0) { //checks if user matches a record
@@ -277,7 +277,7 @@ void run_process() {
 
     while(strlen(input) < 4 || strlen(input) > 32) {
         printf("Invalid username (username has to be between 4 and 32 characters)\nEnter Username: ");
-        fgets(input, 32, stdin);
+        fgets(input, 64, stdin);
         trim_return(input);
     }
 
