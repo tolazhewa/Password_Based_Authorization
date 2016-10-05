@@ -269,10 +269,10 @@ void get_pass(char *pass_input, char *output) {
 //runs the program
 void run_process() {
     char *input;
-    input = (char*)calloc(sizeof(char), 32);
+    input = (char*)calloc(sizeof(char), 64);
 
     printf("Enter Username: ");
-    fgets(input, 32, stdin);
+    fgets(input, 64, stdin);
     trim_return(input);
 
     while(strlen(input) < 4 || strlen(input) > 32) {
