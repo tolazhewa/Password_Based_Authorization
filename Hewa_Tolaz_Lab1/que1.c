@@ -18,11 +18,11 @@ void trim_return(char *str);
 void view_table();
 char * hash_input_password(char *input_pass);
 int password_input_check(char * pass);
+void get_pass(char *pass, char *output);
 void to_upper_case(char *input);
 void new_password(char *un, char *hashed_input);
 void check_user(char * un);
 void run_process();
-
 
 //main method that runs everything
 int main(int argc, const char * argv[]) {
@@ -31,10 +31,6 @@ int main(int argc, const char * argv[]) {
 
     f = fopen("table.txt", "ab+");
 
-    if(f == NULL){
-        printf("failed to initialize the file");
-        return -1;
-    }
     str = (char*)calloc(sizeof(char), 3);
     while(1) {
         view_options();
@@ -120,8 +116,6 @@ void view_table(){
     fclose(f);
 }
 
-
-
 //hash function to hash the password
 char * hash_input_password(char *input_pass){
     char *a, *b, *c, *tr;
@@ -188,69 +182,25 @@ void new_password(char *un, char *hashed_input) {
 void check_user(char * un) {
     FILE *f;
     char *user,*hash,*pass_input,*hashed_input;
-    int counter,i;
-
+    int counter;
 
     user = (char*)calloc(sizeof(char),32);
     pass_input = (char*)calloc(sizeof(char),128);
     f = fopen("table.txt", "r");
     counter = 0;
 
-    while(fgets(user, 64, f) != NULL) { //check every user
+    while(fgets(user, 32, f) != NULL) { //check every user
         trim_return(user);
         separate_hash(user);
         if(strcmp(un,user) == 0) { //checks if user matches a record
             hash = &user[strlen(user)+1];
             while(counter < 3) {
-                printf("Enter Password: ");
-                fgets(pass_input, 128, stdin);
-                trim_return(pass_input);
-                to_upper_case(pass_input);
-
-                while(password_input_check(pass_input) != 1) { //checks the validity of password inputted
-                    printf("invalid password entry (only A-Z, a-z, and 0-9 are allowed)\nEnter Password: ");
-                    fgets(pass_input, 128, stdin);
-                    trim_return(pass_input);
-                    to_upper_case(pass_input);
-                }
-
-                if(strlen(pass_input) < 12) { //makes sure the input is no less than 12 (fills everything else with /0s)
-                    for(i = 0; i < 12 - strlen(pass_input); i++) {
-                        pass_input[strlen(pass_input)+i] = '\0';
-                    }
-                } else if(strlen(pass_input) > 12) {
-                    for(i = 0; i < strlen(pass_input) - 12; i++) {
-                        pass_input[12+i] = '\0';
-                    }
-                }
-
+                get_pass(pass_input, "Enter Password: ");
                 hashed_input = hash_input_password(pass_input); //hashes the password
 
                 if(strcmp(hashed_input,hash) == 0) { //checks if the input is verified
-
                     printf("Verified!\n");
-                    printf("Please enter a new password: ");
-                    fgets(pass_input, 128, stdin);
-                    trim_return(pass_input);
-                    to_upper_case(pass_input);
-
-                    while(password_input_check(pass_input) != 1) { //checks the validity of password inputted
-                        printf("invalid password entry (only A-Z, a-z, and 0-9 are allowed)\nEnter Password: ");
-                        fgets(pass_input, 128, stdin);
-                        trim_return(pass_input);
-                        to_upper_case(pass_input);
-                    }
-
-                    if(strlen(pass_input) < 12) { //makes sure the input is no less than 12 (fills everything else with /0s)
-                        for(i = 0; i < 12 - strlen(pass_input); i++) {
-                            pass_input[strlen(pass_input)+i] = '\0';
-                        }
-                    } else if(strlen(pass_input) > 12) {
-                        for(i = 0; i < strlen(pass_input) - 12; i++) {
-                            pass_input[12+i] = '\0';
-                        }
-                    }
-
+                    get_pass(pass_input, "Please enter a new password: ");
                     hashed_input = hash_input_password(pass_input);
                     new_password(un, hashed_input);
                     return;
@@ -271,27 +221,7 @@ void check_user(char * un) {
     }
 
     if(counter < 3) { //checks counter count
-        printf("New username, enter a password: ");
-        fgets(pass_input, 128, stdin);
-        trim_return(pass_input);
-        to_upper_case(pass_input);
-
-        while(password_input_check(pass_input) != 1) { //checks the validity of password inputted
-            printf("invalid password entry (only A-Z, a-z, and 0-9 are allowed)\nEnter Password: ");
-            fgets(pass_input, 128, stdin);
-            trim_return(pass_input);
-            to_upper_case(pass_input);
-        }
-
-        if(strlen(pass_input) < 12) { //makes sure the input is no less than 12 (fills everything else with /0s)
-            for(i = 0; i < 12 - strlen(pass_input); i++) {
-                pass_input[strlen(pass_input)+i] = '\0';
-            }
-        } else if(strlen(pass_input) > 12){
-            for(i = 0; i < strlen(pass_input) - 12; i++) {
-                pass_input[12+i] = '\0';
-            }
-        }
+        get_pass(pass_input, "New username, enter a password: ");
         hashed_input = hash_input_password(pass_input);
 
         f = fopen("table.txt", "a");
@@ -310,6 +240,31 @@ void check_user(char * un) {
         free(hashed_input);
     if(pass_input != NULL)
         free(pass_input);
+}
+
+void get_pass(char *pass_input, char *output) {
+  int i;
+
+  printf("%s", output);
+  fgets(pass_input, 128, stdin);
+  trim_return(pass_input);
+  to_upper_case(pass_input);
+
+  while(password_input_check(pass_input) != 1) { //checks the validity of password inputted
+      printf("invalid password entry (only A-Z, a-z, and 0-9 are allowed)\nEnter Password: ");
+      fgets(pass_input, 128, stdin);
+      trim_return(pass_input);
+      to_upper_case(pass_input);
+  }
+  if(strlen(pass_input) < 12) { //makes sure the input is no less than 12 (fills everything else with /0s)
+      for(i = 0; i < 12 - strlen(pass_input); i++) {
+          pass_input[strlen(pass_input)+i] = '\0';
+      }
+  } else if(strlen(pass_input) > 12) {
+      for(i = 0; i < strlen(pass_input) - 12; i++) {
+          pass_input[12+i] = '\0';
+      }
+  }
 }
 
 //runs the program
