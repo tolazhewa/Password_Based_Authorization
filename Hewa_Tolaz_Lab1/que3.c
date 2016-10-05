@@ -31,9 +31,9 @@ void find_hash(char *input){
     char *line, *hash;
 
     f = fopen("allcomb.txt", "r");
-    line = (char*)calloc(sizeof(char),32);
+    line = (char*)calloc(sizeof(char),128);
 
-    while(fgets(line, 32, f)) { //check every entry
+    while(fgets(line, 128, f)) { //check every entry
         trim_return(line);
         hash = separate_hash(line);
         if(!strcmp(hash,input)) {

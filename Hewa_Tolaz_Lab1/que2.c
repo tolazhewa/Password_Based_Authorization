@@ -30,11 +30,11 @@ int main(int argc, const char * argv[]) {
     srand(time(NULL));
     r = rand();
 
-    un = (char*)calloc(sizeof(char), 32);
+    un = (char*)calloc(sizeof(char), 64);
     pass_input = (char*)calloc(sizeof(char), 128);
 
     printf("Enter Username: ");
-    fgets(un, 32, stdin);
+    fgets(un, 64, stdin);
     trim_return(un);
     if(!check_user(un)) {
       printf("User not found, exiting program...\n");
@@ -55,9 +55,9 @@ int check_user(char *un) {
 
   f = fopen("table.txt", "r");
 
-  line = (char*)calloc(sizeof(char),64);
+  line = (char*)calloc(sizeof(char), 128);
 
-  while(fgets(line, 64, f)) { //check every user
+  while(fgets(line, 128, f)) { //check every user
       trim_return(line);
       separate_hash(line);
       if(!strcmp(un,line)){
@@ -82,10 +82,10 @@ void check_pass(char* un, char * hashed_input, int r) {
     ip2 = XOR(&hashed_input[4],r);
     ip3 = XOR(&hashed_input[8],r);
 
-    user = (char*)calloc(sizeof(char), 64);
+    user = (char*)calloc(sizeof(char), 128);
 
     //server password
-    while(fgets(user, 64, f)) { //check every user
+    while(fgets(user, 128, f)) { //check every user
         trim_return(user);
         separate_hash(user);
         if(!strcmp(un,user)) { //checks if user matches a record
