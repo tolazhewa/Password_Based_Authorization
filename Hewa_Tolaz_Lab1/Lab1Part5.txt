@@ -1,4 +1,5 @@
 CPS 633Lab 1 – Part 5 Word ProblemsAlessandro ProfennaTolaz HewaSteven Dong
+Gurkirat Singh
 ____1Q) Supposed ‘hashed’ passwords are salted using 4-bit salt values. Discuss the effect of using these salts in terms of computational and storage requirement of the password cracker described in section 3. 
 1A) If passwords are salted using 4-bit salt values, this allows for a much more secure database of login information. One of the primary reasons is because adding any additional values to a password exponentially increases the number of possible permutations of strings, which would use significant computational resources. This would work against the password cracker in Question 3, which searches through a database already filled with hundreds of thousands of entries. Also, since salt values are an additional security feature to hashing, there is a much lower chance of a rainbow table finding a match.
 
